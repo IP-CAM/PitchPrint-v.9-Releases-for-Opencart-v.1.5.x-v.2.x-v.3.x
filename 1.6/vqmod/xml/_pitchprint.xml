@@ -16,6 +16,8 @@
 					
                     $this->data['current_design_id'] = -1;
                     $this->data['current_upload_opt'] = 0;
+                    $this->data['current_display_opt'] = '';
+
                     
                     if (isset($this->request->get['product_id'])) {
                         $this->load->model('pitchprint/process');
@@ -25,6 +27,7 @@
                         if (count($pitch_val) > 1) {
                             $this->data['current_design_id'] = $pitch_val[0];
                             $this->data['current_upload_opt'] = $pitch_val[1];
+                            $this->data['current_display_opt'] = (isset($pitch_val[2]) ? $pitch_val[2] : '');
                         }
                     }
 
@@ -103,6 +106,34 @@
 									</select>
 								</td>
 							</tr>
+							<tr>
+								<td><label class="col-sm-2 control-label" for="display_mode">Display Mode</label></td>
+								<td>
+									<select id="ppa_pick_display_mode" name="ppa_pick_display_mode" class="form-control">
+										<option value="">None</option>
+										<option value="modal">Full Window</option>
+										<option value="inline">Inline</option>
+										<option value="mini">Mini</option>
+									</select>
+								</td>
+							</tr>
+							<script>
+								(function(){
+									var displayMode = jQuery('[name="ppa_pick_display_mode"]');
+									displayMode.val('<?php echo $current_display_opt; ?>');
+									
+									displayMode[0].addEventListener('web2print_options_changed', _updatePpOptions);
+									displayMode.change(_updatePpOptions);
+									
+									function _updatePpOptions () {
+										var ppOptions = jQuery("#web2print_option_values");
+										var a = ppOptions.val().split(':');
+										a[2] = displayMode.val();
+										ppOptions.val(a.join(':'));	 
+									}
+									
+								})();
+							</script>
 							<tr>
 								<td>Choose Design Template:</td>
 								<td>
@@ -184,17 +215,21 @@
 							//====================
 							$current_design_id = "0";
 							$current_upload_opt = "0";
+							$current_display_opt = "";
+
 							if ($wquery->num_rows) {
 								$current_option = $wquery->row['option_value'];
 								$temp_array = explode(":", $current_option);
 								if (count($temp_array) > 1) {
 									$current_design_id = $temp_array[0];
 									$current_upload_opt = $temp_array[1];
+									$current_display_opt = (isset($temp_array[2]) ? $temp_array[2] : '');
 								}
 							}
 							$this->data[$key] = array(
 								'design_id'		   => $current_design_id,
 								'upload'		   => $current_upload_opt,
+								'ppa_display_mode' => $current_display_opt,
 				]]></add>
 		</operation>
 		<operation>
@@ -221,6 +256,7 @@
 				<add><![CDATA[
 					'design_id'   => $product['design_id'],
 					'upload'   => $product['upload'],
+					'ppa_display_mode' => $product['ppa_display_mode'],
 				]]></add>
 		</operation>
 	</file>
@@ -396,15 +432,19 @@
 						if (count($temp_array) > 1) {
 							$current_design_id = $temp_array[0];
 							$current_upload_opt = $temp_array[1];
+							$current_display_opt = (isset($temp_array[2]) ? $temp_array[2] : '');
 						}else {
 							$current_design_id = "0";
 							$current_upload_opt = "0";
+							$current_display_opt = "";
 						}
 						$query->row['design_id'] = $current_design_id;
 						$query->row['upload'] = $current_upload_opt;
+						$query->row['ppa_display_mode'] = $current_display_opt;
 					}else{
 						$current_design_id = "0";
 						$current_upload_opt = "0";
+						$current_display_opt = "";
 					}
 			]]></add>
 		</operation>
@@ -414,6 +454,7 @@
 						
 					'design_id'       => $current_design_id,
 					'upload'       => $current_upload_opt,
+					'ppa_display_mode' => $current_display_opt,
 						
 			]]></add>
 		</operation>
@@ -442,6 +483,7 @@
 					if (!empty($product_info['design_id'])) $GLOBALS['pitchprint']['product_id'] = $product_info['product_id'];
 					$GLOBALS['pitchprint']['design_id'] = $this->data['design_id'] = $product_info['design_id'];;
 					$GLOBALS['pitchprint']['upload'] = $this->data['upload'] = $product_info['upload'];
+					$GLOBALS['pitchprint']['ppa_display_mode'] = $this->data['ppa_display_mode'] = $product_info['ppa_display_mode'];
 					$GLOBALS['pitchprint']['product_title'] = addslashes($this->data['heading_title']);
 					$GLOBALS['pitchprint']['lang'] = $this->language->get('code');
 
