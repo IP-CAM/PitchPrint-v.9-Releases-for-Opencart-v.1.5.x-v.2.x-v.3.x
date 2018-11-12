@@ -184,17 +184,6 @@
 	</file>
 	
 	
-	
-    
-    <file error="skip" name="catalog/language/*/common/footer.php">
-		<operation error="skip">
-				<search position="replace"><![CDATA[<br />]]></search>
-				<add><![CDATA[
-					&amp; <a target="_blank" href="https://pitchprint.com">PitchPrint</a><br />
-				]]></add>
-		</operation>
-	</file>
-	
     <file error="log" name="system/library/cart/cart.php,system/library/cart.php">
 		<operation error="skip">
 				<search position="replace"><![CDATA[$this->data[$key] = array(]]></search>
@@ -688,8 +677,6 @@
 					<script src="https://s3-eu-west-1.amazonaws.com/pitchprint.io/rsc/js/noes6.js" type="text/javascript"></script>
 					{% endif %}
 
-					<!-- You can remove this if you want, but it helps propagate our site and will be nice if you could maintain it for us. It is totally invisible to visitors. Thank you. -->
-					<div style="opacity:0; width:0; height:0; position:fixed; top:0; left:0"><a style="opacity:0; width:0; height:0;" target="_blank" href="https://pitchprint.com">Powered by PitchPrint</a></div>
 				]]></add>
 		</operation>
 	</file>
