@@ -664,7 +664,7 @@
 										{% endif %}
 										ppOptionId: '{{ pitchprint.product_option_id }}'
 							{% else %}
-										userId: '{% if pitchprint.customer_logged %}{{ pitchprint.customer_id }}{% else %}guest{% endif %}',
+										userId: '{% if pitchprint.user_id %}{{ pitchprint.user_id }}{% else %}guest{% endif %}',
 										mode: 'edit',
 										afterValidation: '{% if pitchprint.user_id %}_fetchProjects{% else %}_sortCart{% endif %}'
 							{% endif %}
