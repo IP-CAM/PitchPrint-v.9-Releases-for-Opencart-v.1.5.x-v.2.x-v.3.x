@@ -261,7 +261,17 @@
 					'upload'   => $product['upload'],
 				]]></add>
 		</operation>
-	</file>
+		<operation>
+			<search position="after"><![CDATA[unset($this->session->data['payment_methods']);]]></search>
+			<add><![CDATA[
+					// PitchPrint clear session after add to cart
+					if (isset($this->session->data['pp_projects'])) {
+						if (isset($this->session->data['pp_projects'][$product_id])) {
+							unset($this->session->data['pp_projects'][$product_id]);
+						}
+					}
+			]]></add>
+		</operation>
     <file error="log" name="catalog/controller/checkout/confirm.php">
 		<operation>
 				<search position="replace"><![CDATA[if ($option['type'] != 'file') {]]></search>
