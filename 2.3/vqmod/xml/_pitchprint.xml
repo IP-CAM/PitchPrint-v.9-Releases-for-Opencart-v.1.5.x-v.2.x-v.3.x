@@ -272,6 +272,7 @@
 					}
 			]]></add>
 		</operation>
+	</file>
     <file error="log" name="catalog/controller/checkout/confirm.php">
 		<operation>
 				<search position="replace"><![CDATA[if ($option['type'] != 'file') {]]></search>
