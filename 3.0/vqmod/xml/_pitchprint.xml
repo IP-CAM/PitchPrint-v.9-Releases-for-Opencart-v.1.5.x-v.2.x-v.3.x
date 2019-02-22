@@ -158,6 +158,21 @@
             ]]></add>
 		</operation>
 	</file>
+	<file name="admin/controller/sale/order.php">
+        <operation>
+				<search position="before"><![CDATA[$this->response->setOutput($this->load->view('sale/order_info', $data));]]></search>
+				<add><![CDATA[ 
+				
+                    $this->load->model('setting/setting');
+					$data['pitchprint_api_value'] = $this->config->get('pitchprint_api_value');
+					$data['pitchprint_secret_value'] = $this->config->get('pitchprint_secret_value');
+					$data['timestamp'] = time();
+					$data['signature'] = md5($data['pitchprint_api_value'] . html_entity_decode($data['pitchprint_secret_value']) . $data['timestamp']);
+
+				]]></add>
+		</operation>
+		
+	</file>
     <file name="admin/view/template/sale/order_info.twig">
 		<operation info="Javascripts needed for Web2print execution">
 				<search position="before"><![CDATA[{{ footer }}]]></search>
@@ -166,8 +181,11 @@
                     <script type="text/javascript">
 						var PPADMIN = window.PPADMIN; if (typeof PPADMIN === 'undefined') window.PPADMIN = PPADMIN = { version: '9.0.0', readyFncs: [] };
 						
-						PPADMIN.vars = { }
-						
+						PPADMIN.vars = {
+							version: 3,
+							credentials: { timestamp:'{{timestamp}}', apiKey:'{{pitchprint_api_value}}', signature:'{{signature}}' }
+						}
+
 						PPADMIN.readyFncs.push('init'); console.log(PPADMIN.readyFncs);
 						if (typeof PPADMIN.start !== 'undefined') PPADMIN.start();
                     </script>
@@ -257,13 +275,15 @@
 					'upload'   => $product['upload'],
 				]]></add>
 		</operation>
-	    	<operation>
+		<operation>
 			<search position="after"><![CDATA[unset($this->session->data['payment_methods']);]]></search>
 			<add><![CDATA[
 					// PitchPrint clear session after add to cart
-					if (isset($this->session->data['pp_projects'])) {
-						if (isset($this->session->data['pp_projects'][$product_id])) {
-							unset($this->session->data['pp_projects'][$product_id]);
+					if (isset($product_id)) {
+						if (isset($this->session->data['pp_projects'])) {
+							if (isset($this->session->data['pp_projects'][$product_id])) {
+								unset($this->session->data['pp_projects'][$product_id]);
+							}
 						}
 					}
 			]]></add>
