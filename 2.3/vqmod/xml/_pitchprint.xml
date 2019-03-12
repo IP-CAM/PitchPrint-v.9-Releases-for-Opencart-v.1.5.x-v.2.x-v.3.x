@@ -161,14 +161,31 @@
             ]]></add>
 		</operation>
 	</file>
+	<file name="admin/controller/sale/order.php">
+        <operation>
+				<search position="before"><![CDATA[$this->response->setOutput($this->load->view('sale/order_info', $data));]]></search>
+				<add><![CDATA[ 
+				
+                    $this->load->model('setting/setting');
+					$data['pitchprint_api_value'] = $this->config->get('pitchprint_api_value');
+					$data['pitchprint_secret_value'] = $this->config->get('pitchprint_secret_value');
+					$data['timestamp'] = time();
+					$data['signature'] = md5($data['pitchprint_api_value'] . html_entity_decode($data['pitchprint_secret_value']) . $data['timestamp']);
+
+				]]></add>
+		</operation>
+	</file>
     <file name="admin/view/template/sale/order_info.tpl">
 		<operation info="Javascripts needed for Web2print execution">
 				<search position="bottom"></search>
 				<add><![CDATA[ 
                     <script type="text/javascript">
-						var PPADMIN = window.PPADMIN; if (typeof PPADMIN === 'undefined') window.PPADMIN = PPADMIN = { version: '8.3.6', readyFncs: [] };
+						var PPADMIN = window.PPADMIN; if (typeof PPADMIN === 'undefined') window.PPADMIN = PPADMIN = { version: '9.0.0', readyFncs: [] };
 						
-						PPADMIN.vars = { }
+						PPADMIN.vars = {
+							version: 2,
+							credentials: { timestamp:'<?= $timestamp ?>', apiKey:'<?= $pitchprint_api_value ?>', signature:'<?= $signature ?>' }
+						}
 						
 						PPADMIN.readyFncs.push('init');
 						if (typeof PPADMIN.start !== 'undefined') PPADMIN.start();
