@@ -1,6 +1,6 @@
 # PitchPrint for OpenCart
 
-This OpenCart plugin for PichPrint provides an interface between PitchPrint and OpenCart.
+This PichPrint plugin for OpenCart provides an interface between PitchPrint and OpenCart.
 It retrieves all your designs from your PitchPrint account for you to select and assign to a product. 
 You can link your PitchPrint account to Opencart, by providing your domain API key and Secret Key in the PitchPrint Plugin for OpenCart's settings page.
 
