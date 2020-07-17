@@ -10,7 +10,7 @@ The plugin allows you to do the following on OpenCart:
 * Assign a PitchPrint design to a product
 * Choose the display mode of PitchPrint on a per product basis. ( Fullscreen, Inline, Mini )
 * Indicate whether it is compulsory for a product to be customized, before add to cart is possible.
-* Send information about an project / order when certain actions take place, these are the list of available events:
+* Send information about a project / order when certain actions take place, these are the list of available events:
   * When a file is uploaded
   * When a project get's saved
   * When an order is being processed
