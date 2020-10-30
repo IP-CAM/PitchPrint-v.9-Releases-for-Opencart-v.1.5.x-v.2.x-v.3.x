@@ -17,6 +17,7 @@
                 $data['current_design_id'] = -1;
                 $data['current_upload_opt'] = 0;
                 $data['current_display_opt'] = '';
+				$data['customizationRequired'] = 0;
                 
                 if (isset($this->request->get['product_id'])) {
                     $this->load->model('extension/module/pitchprint');
@@ -27,6 +28,7 @@
                         $data['current_design_id'] = $pitch_val[0];
                         $data['current_upload_opt'] = $pitch_val[1];
                         $data['current_display_opt'] = (isset($pitch_val[2]) ? $pitch_val[2] : '');
+						$data['customizationRequired'] = (isset($pitch_val[3]) ? $pitch_val[3] : 1);
                     }
                 }
 
@@ -121,6 +123,20 @@
 								ppOptions.val(a.join(':'));	 
 							}
 							
+						})();
+						(function(){
+							var cRequired = jQuery('input[value=web2print]').parent().children().find('select[id*=input-require]');
+							
+							if (cRequired.length) 
+								cRequired.change(_updatePpOptions);
+							
+							function _updatePpOptions (e) {
+								var ppOptions = jQuery("#web2print_option_values");
+								var a = ppOptions.val().split(':');
+								if (a.length < 3) a.push('');
+								a[3] = e.target.value;
+								ppOptions.val(a.join(':'));	 
+							}
 						})();
 					</script>
 					<div class="form-group">
@@ -435,6 +451,7 @@
 					$current_design_id = "0";
 					$current_upload_opt = "0";
 					$current_display_opt = "";
+					$customizationRequired = 1;
 					
 					$w2pqry = $this->db->query("SELECT * FROM `" . DB_PREFIX . "option` WHERE `type` = 'web2print'");
 					
@@ -449,10 +466,13 @@
 								$current_design_id = $temp_array[0];
 								$current_upload_opt = $temp_array[1];
 								$current_display_opt = (isset($temp_array[2]) ? $temp_array[2] : '');
+								$customizationRequired = (isset($temp_array[3]) ? $temp_array[3] : 1);
+
 							}
 							$query->row['design_id'] = $current_design_id;
 							$query->row['upload'] = $current_upload_opt;
 							$query->row['ppa_display_mode'] = $current_display_opt;
+							$query->row['ppa_customizationRequired'] = $customizationRequired;
 						}
 					}
 						
@@ -462,10 +482,10 @@
 			<search><![CDATA[=> $query->row['product_id'],]]></search>
 			<add position="after"><![CDATA[
 						
-					'design_id'     	=> $current_design_id,
-					'upload'    		=> $current_upload_opt,
-					'ppa_display_mode'	=> $current_display_opt,
-						
+					'design_id'     			=> $current_design_id,
+					'upload'    				=> $current_upload_opt,
+					'ppa_display_mode'			=> $current_display_opt,
+					'ppa_customizationRequired'	=> $customizationRequired,
 			]]></add>
 		</operation>
 	</file>
@@ -481,6 +501,7 @@
 							$GLOBALS['pitchprint']['design_id'] = $data['design_id'] = $product_info['design_id'];
 							$GLOBALS['pitchprint']['upload'] = $data['upload'] = $product_info['upload'];
 							$GLOBALS['pitchprint']['ppa_display_mode'] = $data['ppa_display_mode'] = $product_info['ppa_display_mode'];
+							$GLOBALS['pitchprint']['ppa_customizationRequired'] = $data['ppa_customizationRequired'] = $product_info['ppa_customizationRequired'];
 							$GLOBALS['pitchprint']['product_title'] = addslashes($data['heading_title']);
 							
 							$GLOBALS['pitchprint']['product_option_id'] = $option['product_option_id'];
@@ -661,6 +682,7 @@
 							{% if pitchprint.file_core %}
 										uploadUrl: './uploads/',
 										userId: '{% if pitchprint.customer_logged %}{{pitchprint.customer_id}}{% else %}guest{% endif %}',
+										customizationRequired: {{ pitchprint.ppa_customizationRequired }},
 										enableUpload: {% if pitchprint.upload != "0" %}true{% else %}false{% endif %},
 										displayMode: '{{ pitchprint.ppa_display_mode }}',
 										designId: '{{ pitchprint.design_id }}',
