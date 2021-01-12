@@ -619,6 +619,7 @@
 				<add><![CDATA[
 					$GLOBALS['pitchprint']['api'] = $this->config->get('pitchprint_api_value');
 					$GLOBALS['pitchprint']['lang'] = $this->language->get('code');
+					$GLOBALS['pitchprint']['browser_valid'] = true;
 				]]></add>
 		</operation>
 	</file>
