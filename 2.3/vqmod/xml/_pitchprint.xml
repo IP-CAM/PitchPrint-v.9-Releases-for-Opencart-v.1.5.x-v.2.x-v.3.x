@@ -648,19 +648,9 @@
 					<?php if (isset($GLOBALS['pitchprint']['file_core'])) echo '<script src="catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js" type="text/javascript"></script> '; ?>
 					
 					<?php $shouldLoadClientJs = true;?>
-
-					<?php if ( isset($GLOBALS['pitchprint']['browser_valid']) ): ?>
-
-						<?php if ( !$GLOBALS['pitchprint']['browser_valid'] ): ?>
-
-							<?php $shouldLoadClientJs = false; ?>
-
-				            <script>window.ppCartType = 'oc';</script>
-							<script src="https://s3-eu-west-1.amazonaws.com/pitchprint.io/rsc/js/noes6.js" type="text/javascript"></script>
-
-						<?php endif; ?>
-
-					<?php endif; ?>
+					
+		            <script>window.ppCartType = 'oc';</script>
+					<script src="https://s3-eu-west-1.amazonaws.com/pitchprint.io/rsc/js/noes6.js" type="text/javascript"></script>
 
 					<?php if ($shouldLoadClientJs) : ?>
 
