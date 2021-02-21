@@ -99,7 +99,7 @@ class ControllerExtensionModulePitchprint extends Controller {
 	public function install() {
 		$this->load->model('setting/setting');
 		$this->load->model('extension/module/pitchprint');
-		$this->model_extension_pitchprint->install();
+		$this->model_extension_module_pitchprint->install();
 
 		$settings = $this->model_setting_setting->getSetting('pitchprint');
 		$settings['installed'] = 1;
