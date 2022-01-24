@@ -661,7 +661,7 @@
 					<link href="catalog/view/javascript/jquery/magnific/magnific-popup.css" rel="stylesheet">
 					{% if pitchprint.file_core %} <script src="catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js" type="text/javascript"></script> {% endif %}
 
-					<script src="https://s3-eu-west-1.amazonaws.com/pitchprint.io/rsc/js/client.js" type="text/javascript"></script>
+					<script src="https://pitchprint.io/rsc/js/client.js" type="text/javascript"></script>
 
 					<script>
 						(function(_doc) {
