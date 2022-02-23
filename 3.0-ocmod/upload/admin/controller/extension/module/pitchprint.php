@@ -46,6 +46,7 @@ class ControllerExtensionModulePitchprint extends Controller {
 		
 		$data['api_label'] = $this->language->get('api_label');
 		$data['secret_label'] = $this->language->get('secret_label');
+		$data['cat_cust_enable_label'] = $this->language->get('cat_cust_enable_label');
 		
 		$data['enabled_label'] = $this->language->get('enabled_label');
 		$data['disabled_label'] = $this->language->get('disabled_label');
@@ -53,19 +54,27 @@ class ControllerExtensionModulePitchprint extends Controller {
 		
 		$data['button_save'] = $this->language-> get('button_save');
 		
+		// API Key
 		if (isset($this->request->post['pitchprint_api_value'])) {
 			$data['pitchprint_api_value'] = trim($this->request->post['pitchprint_api_value']);
 		} else {
 			$data['pitchprint_api_value'] = $this->config->get('pitchprint_api_value');
 		}
 		
+		// Secret Key
 		if (isset($this->request->post['pitchprint_secret_value'])) {
 			$data['pitchprint_secret_value'] = trim($this->request->post['pitchprint_secret_value']);
 		} else {
 			$data['pitchprint_secret_value'] = $this->config->get('pitchprint_secret_value');
 		}
 		
-				
+		// Category Customization
+		if (isset($this->request->post['pitchprint_cat_cust_enable'])) {
+			$data['pitchprint_cat_cust_enable'] = trim($this->request->post['pitchprint_cat_cust_enable']);
+		} else {
+			$data['pitchprint_cat_cust_enable'] = $this->config->get('pitchprint_cat_cust_enable');
+		}	
+		
 		$data['heading_title'] = $this->language->get('heading_title');
 		
 		$data['entry_code'] = $this->language->get('entry_code');

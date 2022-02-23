@@ -489,6 +489,29 @@
 			]]></add>
 		</operation>
 	</file>
+	<file error="log" path="catalog/controller/product/category.php">
+		<operation >
+			<search><![CDATA[public function index() {]]></search>
+			<add position="after"><![CDATA[
+					if (isset($this->request->get['ppaIds'])) {
+						$this->load->model('catalog/product');
+						$ppaIds = json_decode($this->request->get['ppaIds']);
+						$designIds = array();
+						foreach($ppaIds as $ppaId) {
+							$ppaProdInfo = $this->model_catalog_product->getProduct($ppaId);
+								if (isset ($ppaProdInfo['design_id']))
+										$designIds[$ppaId] = $ppaProdInfo['design_id'];
+						}
+						echo json_encode(array(
+							'apiKey' => $this->config->get('pitchprint_api_value'), 
+							'designs' => $designIds
+						));
+						exit();
+					}
+			]]></add>
+		</operation>
+	</file>
+			
     <file error="log" path="catalog/controller/product/product.php">
 		<operation >
 			<search><![CDATA[$data['review_status'] = $this->config->get('config_review_status');]]></search>
@@ -632,6 +655,7 @@
 			<search><![CDATA[$this->load->model('catalog/information');]]></search>
 			<add position="before"><![CDATA[
 				$GLOBALS['pitchprint']['api'] = $this->config->get('pitchprint_api_value');
+				$GLOBALS['pitchprint']['cat_cust_enable'] = $this->config->get('pitchprint_cat_cust_enable');
 				$GLOBALS['pitchprint']['lang'] = $this->language->get('code');
 				$data['pitchprint'] = $GLOBALS['pitchprint'];
 			]]></add>
@@ -662,7 +686,11 @@
 					{% if pitchprint.file_core %} <script src="catalog/view/javascript/jquery/magnific/jquery.magnific-popup.min.js" type="text/javascript"></script> {% endif %}
 
 					<script src="https://pitchprint.io/rsc/js/client.js" type="text/javascript"></script>
-
+					
+					{% if pitchprint.cat_cust_enable == 'on' %}
+							<script src="https://pitchprint.io/rsc/js/cat-client.js" type="text/javascript"></script>
+					{% endif %}
+					
 					<script>
 						(function(_doc) {
 							window.ppclient = new PitchPrintClient({
