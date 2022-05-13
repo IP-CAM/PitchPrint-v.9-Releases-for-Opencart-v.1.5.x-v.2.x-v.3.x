@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
 	<name>PitchPrint</name>
-    <version>10.0</version>
+    <version>10.0.1</version>
     <code>pitchprint_web2print</code>
     <author>PitchPrint Ltd</author>
     <link>https://pitchprint.com</link>
@@ -118,9 +118,11 @@
 							
 							function _updatePpOptions () {
 								var ppOptions = jQuery("#web2print_option_values");
-								var a = ppOptions.val().split(':');
-								a[2] = displayMode.val();
-								ppOptions.val(a.join(':'));	 
+								if (ppOptions.val()) {
+									var a = ppOptions.val().split(':');
+									a[2] = displayMode.val();
+									ppOptions.val(a.join(':'));	
+								}
 							}
 							
 						})();
@@ -699,7 +701,7 @@
 										client: 'oc',
 										clientVersion: 3,
 							{% if pitchprint.file_core %}
-										uploadUrl: './uploads/',
+										uploadUrl: './catalog/controller/extension/pitchprint/uploads/',
 										userId: '{% if pitchprint.customer_logged %}{{pitchprint.customer_id}}{% else %}guest{% endif %}',
 										customizationRequired: {{ pitchprint.ppa_customizationRequired }},
 										enableUpload: {% if pitchprint.upload != "0" %}true{% else %}false{% endif %},
