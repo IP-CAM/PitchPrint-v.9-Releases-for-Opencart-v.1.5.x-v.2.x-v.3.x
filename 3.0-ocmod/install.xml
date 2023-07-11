@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <modification>
 	<name>PitchPrint</name>
-    <version>10.0.1</version>
+    <version>10.0.2</version>
     <code>pitchprint_web2print</code>
     <author>PitchPrint Ltd</author>
     <link>https://pitchprint.com</link>
