@@ -300,6 +300,65 @@
 			]]></add>
 		</operation>
 	</file>
+    <file error="log" path="catalog/controller/checkout/success.php">
+    	<operation>
+			<search><![CDATA[public function index() {]]></search>
+			<add position="after"><![CDATA[
+				$saleOrderModelFile = str_replace('catalog', 'admin', DIR_APPLICATION) . 'model/sale/order.php';
+		
+				if ( file_exists( $saleOrderModelFile ) ) {
+					include_once($saleOrderModelFile);
+					
+					$projectIds = [];
+					$mso		= new ModelSaleOrder($this->registry);
+					$products	= $mso->getOrderProducts($this->session->data['order_id']);
+					
+					foreach ($products as $product) {
+						$options = $mso->getOrderOptions($this->session->data['order_id'], $products[0]['order_product_id']);
+						foreach ($options as $meta) {
+							if ($meta['type'] === 'web2print') {
+								$ppMeta = json_decode(urldecode($meta['value']));
+								$projectIds[] = $ppMeta->projectId;
+							}
+						}
+					
+					}
+				
+					if (count($projectIds)) {
+						$authKey = htmlspecialchars_decode($this->config->get('pitchprint_secret_value'));
+						$url = 'https://api.pitchprint.com/runtime/append-project-order-id';
+						
+						$ch = curl_init();
+						curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+						curl_setopt($ch, CURLOPT_URL, $url);
+						curl_setopt($ch, CURLOPT_POST, true);
+						curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+						curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+						
+						curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(array(
+							'projectIds' => $projectIds,
+							'orderId' => $this->session->data['order_id']
+						)));
+						curl_setopt($ch, CURLOPT_HTTPHEADER, [
+							"Authorization: {$authKey}"
+						]);
+						
+						$output = curl_exec($ch);
+						$http_status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+						$content_type = curl_getinfo($ch, CURLINFO_CONTENT_TYPE);
+						$curlerr = curl_error($ch);
+						curl_close($ch);
+						
+						if ($curlerr && $http_status != 200) {
+							$error_message = array('error' => $curlerr);
+							error_log(print_r($error_message, true));
+						}
+					}
+					
+				}
+			]]></add>
+		</operation>
+	</file>
     <file error="log" path="catalog/controller/checkout/confirm.php">
 		<operation>
 			<search><![CDATA[if ($option['type'] != 'file') {]]></search>
